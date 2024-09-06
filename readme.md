@@ -2,31 +2,31 @@
 
 ### Site that app has been tested on
 
->youtube.com
+>youtube.com <br>
     >|Playlist and solo track
 
->soundcloud.com
+>soundcloud.com <br>
     >|Playlist and solo track
 
->instagram.com
+>instagram.com <br>
     >|Reeels as video or sound 
 
->x.com
+>x.com <br>
     >|Posts as video or sound 
 
->Aparat.com
+>Aparat.com <br>
     >|Videos
 
->Discord
+>Discord <br>
     >|every post that has been send in Discord (Video, gif and music)
 
->bitchute.com
+>bitchute.com <br>
     >|every post as video or sound 
 
->rumble.com
+>rumble.com <br>
     >|every post as video or sound 
 
->newgrounds.com
+>newgrounds.com <br>
     >|every post as video or sound 
 
 
