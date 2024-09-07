@@ -19,6 +19,7 @@ import yt_dlp
 from yt_dlp.utils import DownloadError
 import time
 
+armin = "ArminDownloader"
 
 logging.basicConfig(filename="downloader.log", level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
@@ -56,7 +57,7 @@ def health_check():
 def download():
     url = request.args.get('url')
     file_type = request.args.get('type', 'audio')
-    armin = "ArminDownloader"
+    
 
     if not url:
         logging.error("No URL provided for download.")
@@ -140,6 +141,7 @@ def run_server():
 
 app = ctk.CTk()
 app.geometry("600x600")
+app.resizable(False, False)
 app.title("Download everything")
 
 def check_server():
@@ -173,7 +175,7 @@ def download_callback(file_type, platform, urls):
         if url.strip():  
             try:
                 video_id = url.split('v=')[-1].split('&')[0]
-                filename = f"{platform}_{video_id}_{int(time.time())}.mp3" if file_type == 'audio' else f"{platform}_{video_id}_{int(time.time())}.mp4"
+                filename = f"{armin}_{video_id}_{int(time.time())}.mp3" if file_type == 'audio' else f"{armin}_{video_id}_{int(time.time())}.mp4"
                 file_path = get_file_path(filename, file_type)
 
           
@@ -214,10 +216,11 @@ def import_urls_from_file():
 
 
 url_label = ctk.CTkLabel(app, text="URLs (one per line):")
-url_label.pack(pady=10)
+url_label.pack(pady=25)
+
 
 url_text = ctk.CTkTextbox(app, width=400, height=200)
-url_text.pack(pady=10)
+url_text.pack(pady=15)
 
 import_button = ctk.CTkButton(app, text="Import URLs from Text File", command=import_urls_from_file)
 import_button.pack(pady=10)
@@ -227,8 +230,6 @@ download_video_button.pack(pady=10)
 
 download_audio_button = ctk.CTkButton(app, text="Download Audios", command=lambda: start_download('audio', 'youtube'))
 download_audio_button.pack(pady=10)
-
-
 
 progress_label = ctk.CTkLabel(app, text="Progress: 0%")
 progress_label.pack(pady=10)
