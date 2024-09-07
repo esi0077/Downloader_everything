@@ -31,6 +31,6 @@ This application has been tested and works on the following platforms:
 - **Newgrounds**  
   - Download posts as either video or audio.
  
-  # **Img**
+  # 📷 **Img**
   
   <img src="https://i.imgur.com/w12e8dX.png">
