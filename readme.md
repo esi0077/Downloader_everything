@@ -1,32 +1,32 @@
-# Download from anywhere
+# Download from Anywhere
 
-### Site that app has been tested on
+### Supported Websites
 
->youtube.com <br>
-     - >Playlist and solo track
+This application has been tested and works on the following platforms:
 
->soundcloud.com <br>
-     - >Playlist and solo track
+- **YouTube**  
+  - Download individual videos and entire playlists.
 
->instagram.com <br>
-     - >Reeels as video or sound 
+- **SoundCloud**  
+  - Download individual tracks and entire playlists.
 
->x.com <br>
-     - >Posts as video or sound 
+- **Instagram**  
+  - Download Reels as either video or audio.
 
->Aparat.com <br>
-     - >Videos
+- **X (formerly Twitter)**  
+  - Download posts as either video or audio.
 
->Discord <br>
-     - >every post that has been send in Discord (Video, gif and music)
+- **Aparat**  
+  - Download videos.
 
->bitchute.com <br>
-     - >every post as video or sound 
+- **Discord**  
+  - Download any post, including videos, GIFs, and audio files.
 
->rumble.com <br>
-     - >every post as video or sound 
+- **BitChute**  
+  - Download posts as either video or audio.
 
->newgrounds.com <br>
-     - >every post as video or sound 
+- **Rumble**  
+  - Download posts as either video or audio.
 
-
+- **Newgrounds**  
+  - Download posts as either video or audio.
