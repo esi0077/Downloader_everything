@@ -57,7 +57,6 @@ def health_check():
 def download():
     url = request.args.get('url')
     file_type = request.args.get('type', 'audio')
-    
 
     if not url:
         logging.error("No URL provided for download.")
@@ -65,8 +64,7 @@ def download():
 
     try:
         url = requests.utils.unquote(url)
-        
-        
+
         ydl_opts = {
             'quiet': True,
             'extract_flat': 'in_playlist',
@@ -77,6 +75,7 @@ def download():
             result = ydl.extract_info(url, download=False)
 
         if 'entries' in result:
+            skipped_videos = []
             for index, entry in enumerate(result['entries'], start=1):
                 video_url = entry['url']
                 video_id = entry['id']
@@ -90,12 +89,21 @@ def download():
                     'progress_hooks': [progress_hook]
                 }
 
-                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([video_url])
+                try:
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                        ydl.download([video_url])
 
-                logging.info(f"Downloaded {file_type} item {index} from URL: {video_url}")
+                    logging.info(f"Downloaded {file_type} item {index} from URL: {video_url}")
+                except DownloadError:
+                    skipped_videos.append(video_url)
+                    logging.warning(f"Skipped unavailable video: {video_url}")
+                    continue
 
-            return jsonify({"message": f"{file_type.capitalize()} downloads started"}), 200
+            if skipped_videos:
+                return jsonify({"message": f"{file_type.capitalize()} downloads started with some videos skipped", "skipped": skipped_videos}), 206
+            else:
+                return jsonify({"message": f"{file_type.capitalize()} downloads started"}), 200
+
         else:
             video_id = result['id']
             unique_id = int(time.time())
@@ -108,21 +116,21 @@ def download():
                 'progress_hooks': [progress_hook]
             }
 
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([url])
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([url])
 
-            logging.info(f"Downloaded {file_type} from URL: {url}")
-            return jsonify({"message": f"{file_type.capitalize()} download started", "filename": filename}), 200
+                logging.info(f"Downloaded {file_type} from URL: {url}")
+                return jsonify({"message": f"{file_type.capitalize()} download started", "filename": filename}), 200
 
-    except DownloadError as e:
-        logging.error(f"DownloadError during download: {str(e)}")
-        return jsonify({"detail": f"Error during download: {str(e)}"}), 500
-    except FileNotFoundError as e:
-        logging.error(f"FileNotFoundError: {str(e)}")
-        return jsonify({"detail": f"Error during download: {str(e)}"}), 500
+            except DownloadError:
+                logging.warning(f"Skipped unavailable video: {url}")
+                return jsonify({"message": "Video unavailable, skipping"}, 206)
+
     except Exception as e:
         logging.error(f"Error during download: {str(e)}")
         return jsonify({"detail": f"Error during download: {str(e)}"}), 500
+
 
 @server_app.route('/get-file', methods=['GET'])
 def get_file():
