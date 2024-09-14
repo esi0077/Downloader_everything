@@ -24,9 +24,7 @@ armin = "ArminDownloader"
 logging.basicConfig(filename="downloader.log", level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
 
-
 server_app = Flask(__name__)
-
 
 VIDEO_DOWNLOAD_FOLDER = "downloads/videos"
 AUDIO_DOWNLOAD_FOLDER = "downloads/audios"
@@ -40,7 +38,6 @@ def get_file_path(filename, file_type):
         return os.path.join(AUDIO_DOWNLOAD_FOLDER, filename)
     else:
         raise ValueError("Invalid file type specified.")
-
 
 def progress_hook(d):
     if d.get('status') == 'downloading':
@@ -85,7 +82,7 @@ def download():
 
                 ydl_opts = {
                     'outtmpl': file_path,
-                    'format': 'bestaudio' if file_type == 'audio' else 'best',
+                    'format': 'bestaudio' if file_type == 'audio' else 'bestvideo+bestaudio/best',
                     'progress_hooks': [progress_hook]
                 }
 
@@ -112,7 +109,7 @@ def download():
 
             ydl_opts = {
                 'outtmpl': file_path,
-                'format': 'bestaudio' if file_type == 'audio' else 'best',
+                'format': 'bestaudio' if file_type == 'audio' else 'bestvideo+bestaudio/best',
                 'progress_hooks': [progress_hook]
             }
 
@@ -129,8 +126,7 @@ def download():
 
     except Exception as e:
         logging.error(f"Error during download: {str(e)}")
-        return jsonify({"detail": f"Error during download: {str(e)}"}), 500
-
+        print("500")
 
 @server_app.route('/get-file', methods=['GET'])
 def get_file():
@@ -141,11 +137,10 @@ def get_file():
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:
-        return jsonify({"detail": "File not found."}), 404
+        print("404")
 
 def run_server():
     server_app.run(host='127.0.0.1', port=8000)
-
 
 app = ctk.CTk()
 app.geometry("600x600")
@@ -160,7 +155,6 @@ def check_server():
     except requests.exceptions.RequestException:
         return False
 
-
 total_files = 0
 completed_files = 0
 
@@ -172,7 +166,7 @@ def download_callback(file_type, platform, urls):
         return
 
     if not check_server():
-        messagebox.showerror("Error", "Server is not reachable. Please start the server and try again.")
+        messagebox.showerror("Finish")
         logging.error("Server is not reachable. User attempted to download.")
         return
 
@@ -180,18 +174,20 @@ def download_callback(file_type, platform, urls):
     completed_files = 0
 
     for url in urls:
-        if url.strip():  
+        if url.strip():
             try:
                 video_id = url.split('v=')[-1].split('&')[0]
                 filename = f"{armin}_{video_id}_{int(time.time())}.mp3" if file_type == 'audio' else f"{armin}_{video_id}_{int(time.time())}.mp4"
                 file_path = get_file_path(filename, file_type)
 
-          
                 encoded_url = requests.utils.quote(url, safe=':/')
                 response = requests.get(f"http://127.0.0.1:8000/download", params={"url": encoded_url, "type": file_type, "platform": platform})
                 response.raise_for_status()
 
-   
+                if response.status_code == 206:
+                    logging.warning(f"Skipped unavailable video: {url}")
+                    continue
+
                 file_response = requests.get("http://127.0.0.1:8000/get-file", params={"filename": filename, "type": file_type})
                 file_response.raise_for_status()
                 with open(file_path, 'wb') as f:
@@ -200,14 +196,12 @@ def download_callback(file_type, platform, urls):
                 completed_files += 1
                 logging.info(f"Successfully downloaded {file_type} for URL: {url}")
             except requests.exceptions.RequestException as e:
-                error_message = f"Successfully downloaded {file_type}"
-                messagebox.showinfo("Sucsess", error_message)
-
+                logging.error(f"Error downloading file: {e}")
+                messagebox.showinfo("OK", "Check your download folder. If there is nothing, Send a log to issues in github.")
 
     if total_files == completed_files:
         messagebox.showinfo("Success", f"All {file_type}s have been downloaded successfully!")
         logging.info(f"All {file_type}s have been downloaded successfully.")
-
 
 def start_download(file_type, platform):
     urls = url_text.get("1.0", "end-1c").splitlines()
@@ -222,10 +216,8 @@ def import_urls_from_file():
         url_text.delete("1.0", "end")
         url_text.insert("1.0", "\n".join(urls))
 
-
 url_label = ctk.CTkLabel(app, text="URLs (one per line):")
 url_label.pack(pady=25)
-
 
 url_text = ctk.CTkTextbox(app, width=400, height=200)
 url_text.pack(pady=15)
@@ -244,11 +236,11 @@ progress_label.pack(pady=10)
 
 def update_progress(percentage):
     progress_label.configure(text=f"Progress: {percentage:.2f}%")
+    app.update_idletasks()
 
+if __name__ == "__main__":
+    server_thread = Thread(target=run_server)
+    server_thread.daemon = True
+    server_thread.start()
 
-server_thread = Thread(target=run_server)
-server_thread.daemon = True
-server_thread.start()
-
-
-app.mainloop()
+    app.mainloop()
