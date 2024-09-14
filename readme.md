@@ -34,3 +34,11 @@ This application has been tested and works on the following platforms:
   # 📷 **Img**
   
   <img src="https://i.imgur.com/w12e8dX.png">
+
+
+  # 🟢 Update V1.1
+
+- **Enhanced Playlist Downloading**
+  - Now supports seamless playlist downloads without errors.
+  - The app intelligently skips hidden or premium videos/music within the playlist, ensuring uninterrupted downloads. Just queue your playlist, and let the app handle everything for you!
+
