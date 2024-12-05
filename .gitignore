@@ -163,3 +163,4 @@ cython_debug/
 \downloads\audios
 \downloads\videos
 .log
+*.bat

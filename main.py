@@ -21,7 +21,7 @@ import time
 import os
 import subprocess
 
-# Content of the batch file
+
 bat_content = """@echo off
 :: Check if Python is installed
 python --version >nul 2>&1
@@ -77,6 +77,9 @@ try:
     subprocess.run([bat_filename], check=True)
 except subprocess.CalledProcessError as e:
     print(f"An error occurred while running the batch file: {e}")
+
+
+# Main app 
 
 armin = "ArminDownloader"
 
