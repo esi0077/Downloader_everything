@@ -18,6 +18,65 @@ import os
 import yt_dlp
 from yt_dlp.utils import DownloadError
 import time
+import os
+import subprocess
+
+# Content of the batch file
+bat_content = """@echo off
+:: Check if Python is installed
+python --version >nul 2>&1
+IF ERRORLEVEL 1 (
+    echo Python is not installed. Please install Python and try again.
+    pause
+    exit /b
+)
+
+:: Check if pip is installed
+echo Checking pip...
+python -m pip --version >nul 2>&1
+IF ERRORLEVEL 1 (
+    echo Pip is not installed. Installing pip...
+    python -m ensurepip --default-pip
+)
+
+:: Upgrade pip to the latest version
+echo Upgrading pip to the latest version...
+python -m pip install --upgrade pip
+
+:: Install required libraries
+SET LIBS=customtkinter requests flask yt-dlp
+
+for %%L in (%LIBS%) do (
+    echo Checking %%L...
+    python -m pip show %%L >nul 2>&1
+    IF ERRORLEVEL 1 (
+        echo Installing %%L...
+        python -m pip install %%L
+    ) ELSE (
+        echo %%L is already installed.
+    )
+)
+
+echo All dependencies are installed.
+exit /b
+"""
+
+# File name for the batch file
+bat_filename = "update.bat"
+
+# Check if the batch file exists
+if not os.path.exists(bat_filename):
+    # Create the batch file
+    with open(bat_filename, "w") as bat_file:
+        bat_file.write(bat_content)
+    print(f"{bat_filename} has been created.")
+
+# Run the batch file
+try:
+    print("Running the batch file...")
+    subprocess.run([bat_filename], check=True)
+except subprocess.CalledProcessError as e:
+    print(f"An error occurred while running the batch file: {e}")
 
 armin = "ArminDownloader"
 
