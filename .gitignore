@@ -164,3 +164,4 @@ cython_debug/
 \downloads\videos
 .log
 *.bat
+build_V2.5
