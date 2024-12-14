@@ -42,3 +42,10 @@ This application has been tested and works on the following platforms:
   - Now supports seamless playlist downloads without errors.
   - The app intelligently skips hidden or premium videos/music within the playlist, ensuring uninterrupted downloads. Just queue your playlist, and let the app handle everything for you!
 
+
+  # 🟢 Update V2.5
+
+- ***Auto update added**
+  - A new feature automatically generates a .bat file that updates your dependencies effortlessly.
+  - if you dont have python installed you can install it here .
+  - If you do not have Python installed on your system, you can download it here [python for windows 64-bit](https://www.python.org/ftp/python/3.13.1/python-3.13.1-amd64.exe).
