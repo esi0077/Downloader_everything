@@ -137,9 +137,15 @@ def download():
             skipped_videos = []
             for index, entry in enumerate(result['entries'], start=1):
                 video_url = entry['url']
-                video_id = entry['id']
-                unique_id = int(time.time())
-                filename = f"{armin}_{video_id}_{index}_{unique_id}.mp3" if file_type == 'audio' else f"{armin}_{video_id}_{index}_{unique_id}.mp4"
+                try:
+                    with yt_dlp.YoutubeDL({'quiet': True}) as ydl_temp:
+                        video_info = ydl_temp.extract_info(video_url, download=False)
+                        safe_title = "".join(c if c.isalnum() or c in " -_." else "_" for c in video_info.get("title", f"{index}_{int(time.time())}"))
+                except Exception as e:
+                    logging.warning(f"Failed to fetch full metadata for: {video_url}, fallback to ID.")
+                    safe_title = f"{armin}_{entry['id']}_{index}_{int(time.time())}"
+
+                filename = f"{safe_title}.mp3" if file_type == 'audio' else f"{safe_title}.mp4"
                 file_path = get_file_path(filename, file_type)
 
                 ydl_opts = {
@@ -151,8 +157,7 @@ def download():
                 try:
                     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                         ydl.download([video_url])
-
-                    logging.info(f"Downloaded {file_type} item {index} from URL: {video_url}")
+                    logging.info(f"Downloaded {file_type} item {index}: {video_url}")
                 except DownloadError:
                     skipped_videos.append(video_url)
                     logging.warning(f"Skipped unavailable video: {video_url}")
@@ -164,22 +169,21 @@ def download():
                 return jsonify({"message": f"{file_type.capitalize()} downloads started"}), 200
 
         else:
-            video_id = result['id']
-            unique_id = int(time.time())
-            filename = f"{armin}_{video_id}_1_{unique_id}.mp3" if file_type == 'audio' else f"{armin}_{video_id}_1_{unique_id}.mp4"
-            file_path = get_file_path(filename, file_type)
-
-            ydl_opts = {
-                'outtmpl': file_path,
-                'format': 'bestaudio' if file_type == 'audio' else 'bestvideo+bestaudio/best',
-                'progress_hooks': [progress_hook]
-            }
-
             try:
+                safe_title = "".join(c if c.isalnum() or c in " -_." else "_" for c in result.get("title", f"{int(time.time())}"))
+                filename = f"{safe_title}.mp3" if file_type == 'audio' else f"{safe_title}.mp4"
+                file_path = get_file_path(filename, file_type)
+
+                ydl_opts = {
+                    'outtmpl': file_path,
+                    'format': 'bestaudio' if file_type == 'audio' else 'bestvideo+bestaudio/best',
+                    'progress_hooks': [progress_hook]
+                }
+
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                     ydl.download([url])
 
-                logging.info(f"Downloaded {file_type} from URL: {url}")
+                logging.info(f"Downloaded single {file_type} from URL: {url}")
                 return jsonify({"message": f"{file_type.capitalize()} download started", "filename": filename}), 200
 
             except DownloadError:
@@ -188,7 +192,8 @@ def download():
 
     except Exception as e:
         logging.error(f"Error during download: {str(e)}")
-        print("500")
+        return jsonify({"message": "Internal Server Error"}), 500
+
 
 @server_app.route('/get-file', methods=['GET'])
 def get_file():
