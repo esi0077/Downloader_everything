@@ -49,3 +49,13 @@ This application has been tested and works on the following platforms:
   - A new feature automatically generates a .bat file that updates your dependencies effortlessly.
   - if you dont have python installed you can install it here .
   - If you do not have Python installed on your system, you can download it here [python for windows 64-bit](https://www.python.org/ftp/python/3.13.1/python-3.13.1-amd64.exe).
+
+
+  # 🟢 Update V3
+
+- ***UI and Downloader Upgraded**
+  - New professional custom interface with better alignment and cleaner layout.
+  - Settings moved to gear icon menu, with separate format and quality info boxes on top.
+  - Download progress is now real-time and smoother for each item.
+  - FFmpeg auto install is built-in with live install progress and status.
+  - Now asks user to select output folder on download, instead of fixed audio/video directories.
