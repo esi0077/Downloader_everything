@@ -1,35 +1,55 @@
-# Download from Anywhere
+## 🔽 Download from Multiple Sources
 
-### Supported Websites
+### 🌐 Supported Platforms (Tested)
 
-This application has been tested and works on the following platforms:
+This application is a **general-purpose media downloader framework** that works across multiple publicly accessible platforms.
 
-- **YouTube**  
-  - Download individual videos and entire playlists.
+It has been tested with:
 
-- **SoundCloud**  
-  - Download individual tracks and entire playlists.
+- YouTube  
+- SoundCloud  
+- Instagram  
+- X (formerly Twitter)  
+- Discord  
+- BitChute  
+- Rumble  
+- Newgrounds  
+- Aparat  
 
-- **Instagram**  
-  - Download Reels as either video or audio.
+> ⚠️ Platform availability may change depending on updates, restrictions, or service policies.
 
-- **X (formerly Twitter)**  
-  - Download posts as either video or audio.
+---
 
-- **Aparat**  
-  - Download videos.
+## ⚙️ Features
 
-- **Discord**  
-  - Download any post, including videos, GIFs, and audio files.
+- Download publicly accessible media content  
+- Support for various media formats (video, audio, etc.)  
+- Playlist and batch processing (where supported)  
+- Modular design for extending platform support  
 
-- **BitChute**  
-  - Download posts as either video or audio.
+---
 
-- **Rumble**  
-  - Download posts as either video or audio.
+## ⚖️ Acceptable Use
 
-- **Newgrounds**  
-  - Download posts as either video or audio.
+This project is intended as a **general-purpose downloading tool**.
+
+By using this software, you agree that:
+
+- You will only download content you **own** or have **permission** to access and store  
+- You will comply with the **Terms of Service** of all platforms used  
+- You are responsible for ensuring your usage complies with applicable laws and regulations  
+
+This project:
+
+- Does **not host or distribute any content**  
+- Does **not encourage unauthorized downloading of copyrighted material**  
+- Is provided for **educational and personal use purposes**  
+
+---
+
+## 🧩 Extensibility
+
+The application is designed with a modular structure, allowing additional platform support to be added or removed as needed.
  
   # 📷 **Img**
   
